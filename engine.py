@@ -2,15 +2,16 @@ import pygame
 import os 
 import random
 
-# Grid 
-# Logic for creating tetromino 
-# Logic for making them fall in the grid 
 # Logic for collison detection
 # Logic for game points 
 
 
 def load_image(image_name):
     return pygame.image.load(images_dir + image_name)
+
+def load_music(music_name): 
+    music_dir = os.getcwd() + "/Music/"
+    return pygame.mixer.Sound(music_dir + music_name)
 
 pygame.init()
 screen_height = 600
@@ -35,6 +36,21 @@ tetrominos = [cube_block, i_block, j_block, l_block, r_s_block, s_block, t_block
 GRIDSIZE = screen_height // 24
 COLLAPSED_BLOCKS = []
 
+x_pos =  100 #screen_height / 2 - screen_width / 2
+y_pos =  0 #screen_height - screen_width 
+os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (x_pos, y_pos)
+os.environ['SDL_VIDEO_CENTERED'] = '0'
+
+
+""" BACKGROUND MUSIC """
+kalinka = load_music("kalinka.ogg")
+katyusha = load_music("katyusha.ogg")
+korobushka = load_music("korobushka.ogg")
+smuglianka = load_music("smuglianka.ogg")
+
+background_music = random.choice([kalinka, katyusha, korobushka, smuglianka])
+
+pygame.mixer.Channel(0).play(background_music, -1)
 
 def render_collapsed_blocks():
     global COLLAPSED_BLOCKS
@@ -44,19 +60,9 @@ def render_collapsed_blocks():
         for block_dict in COLLAPSED_BLOCKS: 
             window.blit(block_dict["current_block"], (block_dict["x_coord"], block_dict["y_coord"]))
 
-def render_window_in_center(): 
-    x_pos =  screen_height / 2 - screen_width / 2
-    y_pos =  screen_height - screen_width 
-    os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (x_pos, y_pos)
-    os.environ['SDL_VIDEO_CENTERED'] = '0'
-
-
-# def render_block_after_stoppage(block_count, x_coord, y_coord): 
-#     current_block = tetrominos[block_count]
-#     window.blit(current_block, (x_coord, y_coord))
-
 def generate_tetrominos(x_coord, y_coord, counter): 
     if counter == 0: 
+        counter = random.randrange(0, 7)
         block = tetrominos[0] 
     else: 
         block = tetrominos[counter]
@@ -78,8 +84,7 @@ def render_score_board():
 
 def game_loop():
     global window, clock, grid
-    render_window_in_center()
-    block_speed = 2
+    block_speed = 1
     block_start_y_coord = -50
     block_start_x_coord = random.randrange(0, 200)
     block_count = 0 
@@ -96,11 +101,17 @@ def game_loop():
                 quit()
 
             if event.key == pygame.K_DOWN: 
-                block_speed += 2
+                block_speed += 1
+
+            if event.key == pygame.K_LEFT: 
+                block_start_x_coord -= 2
+
+            if event.key == pygame.K_RIGHT: 
+                block_start_x_coord += 2
 
         if event.type == pygame.KEYUP: 
             if event.key == pygame.K_DOWN: 
-                block_speed = 2
+                block_speed = 1
 
         window.blit(grid, (0, 0))
         render_grid()
@@ -113,7 +124,6 @@ def game_loop():
             global COLLAPSED_BLOCKS
             block_dict = {"current_block": tetrominos[block_count], "x_coord": block_start_x_coord, "y_coord": block_start_y_coord} 
             COLLAPSED_BLOCKS.append(block_dict)
-            # render_block_after_stoppage(block_count, block_start_x_coord, block_start_y_coord)
             block_count = random.randrange(0, 7)
             block_start_y_coord = -50
             block_start_x_coord = random.randrange(0, 200)
