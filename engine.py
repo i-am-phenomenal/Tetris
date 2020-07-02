@@ -125,8 +125,21 @@ def check_collision_for_cube(current_row, current_column):
 
     # print((current_row, current_column))
     # print(COLLAPSED_BLOCKS)
+    # time.sleep(0.9)
+    #WIP Conditions
+    print((current_row, current_column))
+    print(COLLAPSED_BLOCKS)
     for block in COLLAPSED_BLOCKS: 
-        if block["row"] == current_row and block["column"] == current_column:
+        # This is done just to make it more readable for myself
+        condition_1 = (block["row"] == current_row and block["column"] == current_column) 
+        # condition_2 = (block["row"] == current_row )
+        condition_2 = ((block["row"] - 1) == current_row + 1) and ((block["column"] - 1) == current_column + 1)
+        # condition_3 = ((block["row"] + 1) == current_row - 1) and ((block["column"] + 1) == current_column - 1)
+        # condition_4 = ((block["row"] + 1) == current_row + 1) and ((block["column"] + 1) == current_column + 1)
+        # condition_5 = ((block["row"] - 1) == current_row - 1) and ((block["column"] - 1) == current_column - 1)
+
+        if condition_1 or condition_2:# or condition_3 or condition_4 or condition_5:
+            print("TRUE")
             return True
 
         else: 
@@ -235,7 +248,7 @@ def game_loop():
                 "column": math.ceil(block_start_y_coord / GRIDSIZE) + 1
                 } 
 
-            print(block_dict) # WIP
+            # print(block_dict) # WIP
 
             COLLAPSED_BLOCKS.append(block_dict)
             block_count = 0 #random.randrange(0, 7)
@@ -245,9 +258,6 @@ def game_loop():
             # block_start_x_coord = random.choice([x for x in range(326) if x % GRIDSIZE == 0 ])
          
         
-        # if check_for_collision(block_start_x_coord, block_start_y_coord):
-        #     print(True)
-
         if block_start_y_coord > 525: 
             block_start_y_coord = 525
 
