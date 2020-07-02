@@ -4,7 +4,7 @@ import random
 import math 
 import time
 
-# Render and move tetrominos in blocks
+
 # Logic for collison detection
 # Logic for game points 
 # WIP: move tetrominos in blocks
@@ -24,7 +24,6 @@ clock = pygame.time.Clock()
 
 black_color = (0, 0, 0)
 white_color = (200, 200, 200)
-# blue_color = (0, 0, 128)
 images_dir = os.getcwd() + "/Images/"
 grid = load_image("grid.jpg")
 cube_block = load_image("cube-block.png")
@@ -38,8 +37,7 @@ score_board = load_image("score_board.jpg")
 tetrominos = [cube_block, i_block, j_block, l_block, r_s_block, s_block, t_block]
 GRIDSIZE = screen_height // 24 
 COLLAPSED_BLOCKS = []
-CURRENT_BLOCK = {"x_coord": 0, "y_coord": 0, "row": 0, "column": 0}
-BLOCK_Y_COORDS = [x for x in range(531) if x % GRIDSIZE  == 0] #WIP
+BLOCK_Y_COORDS = [x for x in range(531) if x % GRIDSIZE  == 0]
 BLOCK_X_COORDS = [x for x in range(326) if x % GRIDSIZE == 0 ]
 
 
@@ -73,16 +71,11 @@ def render_collapsed_blocks():
             window.blit(block_dict["current_block"], (block_dict["x_coord"], block_dict["y_coord"]))
 
 def generate_tetrominos(x_coord, y_coord, counter): 
-    global CURRENT_BLOCK, GRIDSIZE
+    global GRIDSIZE
     if counter == 0: 
         block = tetrominos[0] 
     else: 
         block = tetrominos[counter]
-
-    CURRENT_BLOCK["x_coord"] = x_coord
-    CURRENT_BLOCK["y_coord"] = y_coord
-    CURRENT_BLOCK["row"] = math.ceil(x_coord / GRIDSIZE) + 1
-    CURRENT_BLOCK["column"] = math.ceil(y_coord / GRIDSIZE) + 1
 
     window.blit(block, (x_coord, y_coord))
     return block
@@ -130,7 +123,7 @@ def update_block_counter(counter):
         
 
 def game_loop():
-    global window, clock, grid, GRIDSIZE, CURRENT_BLOCK, BLOCK_Y_COORDS, BLOCK_X_COORDS
+    global window, clock, grid, GRIDSIZE, BLOCK_Y_COORDS, BLOCK_X_COORDS
     block_counter = 0
     block_start_y_coord = -100
     block_start_x_coord = random.choice(BLOCK_X_COORDS)
@@ -150,9 +143,6 @@ def game_loop():
             if event.key == pygame.K_DOWN and block_start_y_coord <= 520: 
                 block_counter += 1
                 
-                # CURRENT_BLOCK["column"] += 1
-                # block_speed += 1
-
             if event.key == pygame.K_LEFT and block_start_x_coord >= 10: 
                 block_start_x_coord -= GRIDSIZE
 
@@ -185,7 +175,15 @@ def game_loop():
 
         if block_start_y_coord == 525:
             global COLLAPSED_BLOCKS
-            block_dict = {"current_block": tetrominos[block_count], "x_coord": block_start_x_coord, "y_coord": block_start_y_coord} 
+            
+            block_dict = {
+                "current_block": tetrominos[block_count], 
+                "x_coord": block_start_x_coord, 
+                "y_coord": block_start_y_coord,
+                "row": math.ceil(block_start_x_coord / GRIDSIZE) + 1,
+                "column": math.ceil(block_start_y_coord / GRIDSIZE) + 1
+                } 
+
             COLLAPSED_BLOCKS.append(block_dict)
             block_count = random.randrange(0, 7)
             block_start_y_coord = -100
