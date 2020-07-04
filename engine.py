@@ -106,6 +106,7 @@ def generate_tetrominos(x_coord, y_coord, counter):
     window.blit(block, (x_coord, y_coord))
     return block
 
+
 def render_grid():
     """ Draw horizontal and vertical lines on the entire game window.
         Space between the lines is GRIDSIZE.
@@ -128,17 +129,18 @@ def check_collision_for_cube(current_row, current_column):
     # time.sleep(0.9)
     #WIP Conditions
     print((current_row, current_column))
-    print(COLLAPSED_BLOCKS)
+    # print(COLLAPSED_BLOCKS)
     for block in COLLAPSED_BLOCKS: 
         # This is done just to make it more readable for myself
         condition_1 = (block["row"] == current_row and block["column"] == current_column) 
+        # condition_2 = block["row"] == (current_row - 1)
         # condition_2 = (block["row"] == current_row )
-        condition_2 = ((block["row"] - 1) == current_row + 1) and ((block["column"] - 1) == current_column + 1)
+        # condition_2 = ((block["row"] - 1) == current_row + 1) and ((block["column"] - 1) == current_column + 1)
         # condition_3 = ((block["row"] + 1) == current_row - 1) and ((block["column"] + 1) == current_column - 1)
         # condition_4 = ((block["row"] + 1) == current_row + 1) and ((block["column"] + 1) == current_column + 1)
         # condition_5 = ((block["row"] - 1) == current_row - 1) and ((block["column"] - 1) == current_column - 1)
 
-        if condition_1 or condition_2:# or condition_3 or condition_4 or condition_5:
+        if condition_1:#or condition_2 or condition_3 or condition_4 or condition_5:
             print("TRUE")
             return True
 
@@ -166,15 +168,8 @@ def check_for_collision(x_coord, y_coord, block_count):
     
     current_row =  math.ceil(x_coord / GRIDSIZE) + 1
     current_column =  math.ceil(y_coord / GRIDSIZE) + 1
-
-
-    # for block in COLLAPSED_BLOCKS: 
     return block_collision_cases(current_block, current_row, current_column)
-        # if block["row"] == current_row and block["column"] == current_column: 
-        #     return True
-
-        # else: 
-        #     pass
+    
 
 def update_block_counter(counter):
     global BLOCK_Y_COORDS
@@ -238,8 +233,6 @@ def game_loop():
         clock.tick(8)
         
         if check_for_collision(block_start_x_coord, block_start_y_coord, block_count):
-            # global COLLAPSED_BLOCKS
-
             block_dict = {
                 "current_block": tetrominos[block_count], 
                 "x_coord": block_start_x_coord, 
@@ -247,8 +240,6 @@ def game_loop():
                 "row": math.ceil(block_start_x_coord / GRIDSIZE) + 1,
                 "column": math.ceil(block_start_y_coord / GRIDSIZE) + 1
                 } 
-
-            # print(block_dict) # WIP
 
             COLLAPSED_BLOCKS.append(block_dict)
             block_count = 0 #random.randrange(0, 7)
@@ -261,9 +252,7 @@ def game_loop():
         if block_start_y_coord > 525: 
             block_start_y_coord = 525
 
-        if block_start_y_coord == 525:
-            # global COLLAPSED_BLOCKS
-            
+        if block_start_y_coord == 525:            
             block_dict = {
                 "current_block": tetrominos[block_count], 
                 "x_coord": block_start_x_coord, 
