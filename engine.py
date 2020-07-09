@@ -124,23 +124,23 @@ def render_score_board():
 def check_collision_for_cube(current_row, current_column): 
     global COLLAPSED_BLOCKS
 
-    # print((current_row, current_column))
-    # print(COLLAPSED_BLOCKS)
-    # time.sleep(0.9)
     #WIP Conditions
-    print((current_row, current_column))
     # print(COLLAPSED_BLOCKS)
+    """ SWAPPING CURRENT ROW AND CURRENT COLUMN BECAUSE WE MIGHT HAVE WRONG VALUES IN THESE VARS"""
+    temp = 0
+    temp = current_row 
+    current_row = current_column
+    current_column = temp
+
+    # print((current_row, current_column))
     for block in COLLAPSED_BLOCKS: 
         # This is done just to make it more readable for myself
         condition_1 = (block["row"] == current_row and block["column"] == current_column) 
-        # condition_2 = block["row"] == (current_row - 1)
-        # condition_2 = (block["row"] == current_row )
-        # condition_2 = ((block["row"] - 1) == current_row + 1) and ((block["column"] - 1) == current_column + 1)
-        # condition_3 = ((block["row"] + 1) == current_row - 1) and ((block["column"] + 1) == current_column - 1)
-        # condition_4 = ((block["row"] + 1) == current_row + 1) and ((block["column"] + 1) == current_column + 1)
-        # condition_5 = ((block["row"] - 1) == current_row - 1) and ((block["column"] - 1) == current_column - 1)
+        condition_2 = (block["row"] == (current_row - 1) and block["column"] == (current_column - 1))
+        # print((block["row"], block["column"]), "   --->   ", (current_row, current_column))
 
-        if condition_1:#or condition_2 or condition_3 or condition_4 or condition_5:
+        print(type(current_row), type(current_column), type(block["row"]), type(block["column"]))
+        if condition_2: # or condition_2: # or condition_3 or condition_4 or condition_5:
             print("TRUE")
             return True
 
@@ -257,12 +257,13 @@ def game_loop():
                 "current_block": tetrominos[block_count], 
                 "x_coord": block_start_x_coord, 
                 "y_coord": block_start_y_coord,
-                "row": math.ceil(block_start_x_coord / GRIDSIZE) + 1,
-                "column": math.ceil(block_start_y_coord / GRIDSIZE) + 1
+                "column": math.ceil(block_start_x_coord / GRIDSIZE) + 1,
+                "row": math.ceil(block_start_y_coord / GRIDSIZE) + 1
                 } 
 
             COLLAPSED_BLOCKS.append(block_dict)
-            block_count = 0 #random.randrange(0, 7)
+            block_count = 0
+            print(COLLAPSED_BLOCKS)
             block_start_y_coord = -100
             block_start_x_coord = random.choice([x for x in range(326) if x % GRIDSIZE == 0 ])
             
