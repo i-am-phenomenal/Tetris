@@ -10,9 +10,10 @@ def gameLoop():
     window = gameWindow.setMode()
     clock = pygame.time.Clock()
     pygame.init()
-    
-    grid = gameWindow.loadImage("grid.jpg")
-    window.blit(grid, (0,0))
+
+    gameWindow.renderGameBackground(window)
+    gameWindow.renderGrid(window)
+    gameWindow.renderScoreBoard(window)
     pygame.display.flip()
     while gameWindow.windowRunning: 
         for event in pygame.event.get():
