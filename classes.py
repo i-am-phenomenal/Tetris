@@ -47,6 +47,43 @@ class BackGroundMusic():
         music = random.choice([self.kalinka, self.katyusha, self.korobushka, self.smuglianka])
         pygame.mixer.Channel(0).play(music, -1)
 
-class Block(): 
-    #WIP
-    pass
+class Block(GameWindow): 
+    gameWindow = GameWindow()
+    possibleXCoords = [x for x in range(326) if x % GameWindow.gridSize == 0]
+    possibleYCoords = [y for y in range(531) if y % GameWindow.gridSize == 0]
+    possibleShapes = [
+        gameWindow.loadImage("cube-block.png"),
+        gameWindow.loadImage("i-block.png"),
+        gameWindow.loadImage("j-block.png"),
+        gameWindow.loadImage("L-block.png"),
+        gameWindow.loadImage("r-s-block.png"),
+        gameWindow.loadImage("s-block.png"),
+        gameWindow.loadImage("t-block.png")
+    ]
+    xCoord = random.choice(possibleXCoords)
+    yCoord = 0
+    shape = random.choice(possibleShapes)
+    isFalling = True
+    blockYCoordCounter = 0
+
+    def generateBlock(self, window): 
+        return window.blit(self.shape, (self.xCoord, self.yCoord))
+
+    def updateBlockYCoordCounter(self): 
+        length = len(self.possibleYCoords) - 1
+        counter = self.blockYCoordCounter
+        if  counter == length: 
+            self.blockYCoordCounter =  0
+        elif counter < length: 
+            self.blockYCoordCounter =  counter + 1
+        elif counter > length: 
+            self.blockYCoordCounter = 0
+        else:
+            self.blockYCoordCounter = counter
+
+    def renderBlockDownwardMotion(self): 
+        if self.isFalling: 
+            print(self.blockYCoordCounter)
+            self.yCoord += 25 #self.possibleYCoords[self.blockYCoordCounter]
+        else: 
+            pass
