@@ -61,10 +61,12 @@ class Block(GameWindow):
         gameWindow.loadImage("t-block.png")
     ]
     xCoord = random.choice(possibleXCoords)
-    yCoord = 0
+    yCoord = 20
     shape = random.choice(possibleShapes)
     isFalling = True
     blockYCoordCounter = 0
+    row = 1
+    column = 1
 
     def generateBlock(self, window): 
         return window.blit(self.shape, (self.xCoord, self.yCoord))
@@ -83,7 +85,7 @@ class Block(GameWindow):
 
     def renderBlockDownwardMotion(self): 
         if self.isFalling: 
-            print(self.blockYCoordCounter)
+            # print(self.blockYCoordCounter)
             self.yCoord += 25 #self.possibleYCoords[self.blockYCoordCounter]
         else: 
             pass
