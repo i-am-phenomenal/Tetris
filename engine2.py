@@ -53,7 +53,7 @@ def generateBlock(window):
         return block
     else:
         currentBlock = blocksOnScreen[len(blocksOnScreen) - 1]
-        if currentBlock.column == 21:
+        if currentBlock.row == 21:
             currentBlock.isFalling = False
             collapsedBlocks.append(currentBlock)
             newBlock = spawnBlock(window)
@@ -86,5 +86,10 @@ def gameLoop():
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_ESCAPE: 
                     gameWindow.windowRunning = False
+                if event.key == pygame.K_LEFT and currentBlock.column > 0: 
+                    currentBlock.moveLeft()
+                if event.key == pygame.K_RIGHT and currentBlock.column < 12: 
+                    currentBlock.moveRight()
+
         pygame.display.update()
         clock.tick(60)

@@ -58,8 +58,8 @@ class Block(GameWindow):
         self.shape = ""
         self.isFalling = True
         self.blockYCoordCounter = 0
-        self.row = random.choice(self.possibleRows)
-        self.column = 0
+        self.column = random.choice(self.possibleRows)
+        self.row = 0
 
     def returnRandomBlockShape(self, blockShape): 
         if blockShape == "cube-block": 
@@ -81,7 +81,7 @@ class Block(GameWindow):
 
 
     def generateBlock(self, window): 
-        return window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
+        return window.blit(self.shape, (self.column * GameWindow.gridSize, self.row * GameWindow.gridSize))
 
     def updateBlockYCoordCounter(self): 
         length = len(self.possibleYCoords) - 1
@@ -97,9 +97,21 @@ class Block(GameWindow):
 
     def renderBlockDownwardMotion(self, window): 
         if self.isFalling:
-            self.column += 1
+            self.row += 1
         else: 
             pass
 
     def renderUpdatedPosition(self, window):
-        window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
+        window.blit(self.shape, (self.column * GameWindow.gridSize, self.row * GameWindow.gridSize))
+
+    def moveLeft(self): 
+        if self.isFalling: 
+            self.column -= 1
+        else: 
+            pass
+
+    def moveRight(self): 
+        if self.isFalling:
+            self.column += 1
+        else: 
+            pass
