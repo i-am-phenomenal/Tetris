@@ -60,16 +60,20 @@ class Block(GameWindow):
         gameWindow.loadImage("s-block.png"),
         gameWindow.loadImage("t-block.png")
     ]
+    possibleRows = [x for x in range(15)]
     xCoord = random.choice(possibleXCoords)
-    yCoord = 20
+    yCoord = 100
     shape = random.choice(possibleShapes)
     isFalling = True
     blockYCoordCounter = 0
-    row = 1
-    column = 1
+    row = random.choice(possibleRows)
+    column = 0
 
     def generateBlock(self, window): 
-        return window.blit(self.shape, (self.xCoord, self.yCoord))
+        self.shape = self.possibleShapes[0]
+        windowSurface = window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
+        pygame.display.flip()
+        return windowSurface
 
     def updateBlockYCoordCounter(self): 
         length = len(self.possibleYCoords) - 1
@@ -85,7 +89,13 @@ class Block(GameWindow):
 
     def renderBlockDownwardMotion(self): 
         if self.isFalling: 
-            # print(self.blockYCoordCounter)
-            self.yCoord += 25 #self.possibleYCoords[self.blockYCoordCounter]
+            self.column += 1
         else: 
             pass
+
+    def renderUpdatedPosition(self, window):
+        window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
+        pygame.display.update()
+        pygame.time.delay(100)
+        # pygame.display.flip()
+        # clock.tick(60)

@@ -18,10 +18,8 @@ def renderCollapsedBlocks(window):
 
 def renderDownWardMotionForAllBlocks():
     global blocksOnScreen
-    print(len(blocksOnScreen))
     for block in blocksOnScreen:
         block.renderBlockDownwardMotion()
-        # print(block.yCoord)
 
 def renderDownwardMotion(currentBlock):
     global blocksOnScreen
@@ -30,13 +28,26 @@ def renderDownwardMotion(currentBlock):
     elif currentBlock.yCoord >= 525: 
         currentBlock.yCoord = 525
         
-
-def generateBlock(window): 
+def spawnBlock(window): 
     global blocksOnScreen
     block = Block()
     block.generateBlock(window)
     blocksOnScreen.append(block)
-    return block
+    return block 
+
+def generateBlock(window):
+    global blocksOnScreen
+    if blocksOnScreen == []:
+        block = spawnBlock(window)
+        return block
+    else:
+        currentBlock = blocksOnScreen[len(blocksOnScreen) - 1]
+        if currentBlock.row == 24:
+            currentBlock.isFalling = False
+            newBlock = spawnBlock(window)
+            return newBlock
+        else: 
+            return currentBlock
 
 def gameLoop(): 
     pygame.init()
@@ -45,16 +56,16 @@ def gameLoop():
     window = gameWindow.setMode()
     backGroundMusic = BackGroundMusic()
     backGroundMusic.playRandomMusic()
-
+    gameWindow.renderGameBackground(window)
+    gameWindow.renderGrid(window)
     while gameWindow.windowRunning: 
         renderCollapsedBlocks(window)
         currentBlock = generateBlock(window)
-        renderDownwardMotion(currentBlock)
-        clock.tick(8)
-        gameWindow.renderGameBackground(window)
-        gameWindow.renderGrid(window)
+        currentBlock.renderBlockDownwardMotion()
+        currentBlock.renderUpdatedPosition(window)
+        # clock.tick(8)
         gameWindow.renderScoreBoard(window)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 gameWindow.windowRunning = False
@@ -63,6 +74,6 @@ def gameLoop():
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_ESCAPE: 
                     gameWindow.windowRunning = False
-        pygame.display.flip()
-        pygame.display.update()
-        clock.tick(60)
+        # pygame.display.update()
+        # pygame.display.flip()
+        # clock.tick(60)
