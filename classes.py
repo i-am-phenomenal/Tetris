@@ -51,29 +51,37 @@ class Block(GameWindow):
     gameWindow = GameWindow()
     possibleXCoords = [x for x in range(326) if x % GameWindow.gridSize == 0]
     possibleYCoords = [y for y in range(531) if y % GameWindow.gridSize == 0]
-    possibleShapes = [
-        gameWindow.loadImage("cube-block.png"),
-        gameWindow.loadImage("i-block.png"),
-        gameWindow.loadImage("j-block.png"),
-        gameWindow.loadImage("L-block.png"),
-        gameWindow.loadImage("r-s-block.png"),
-        gameWindow.loadImage("s-block.png"),
-        gameWindow.loadImage("t-block.png")
-    ]
     possibleRows = [x for x in range(15)]
-    xCoord = random.choice(possibleXCoords)
-    yCoord = 100
-    shape = random.choice(possibleShapes)
-    isFalling = True
-    blockYCoordCounter = 0
-    row = random.choice(possibleRows)
-    column = 0
+    def __init__(self): 
+        self.xCoord = random.choice(self.possibleXCoords)
+        self.yCoord = 100
+        self.shape = ""
+        self.isFalling = True
+        self.blockYCoordCounter = 0
+        self.row = random.choice(self.possibleRows)
+        self.column = 0
+
+    def returnRandomBlockShape(self, blockShape): 
+        if blockShape == "cube-block": 
+            self.shape = self.gameWindow.loadImage("cube-block.png")
+        elif blockShape == "i": 
+            self.shape = self.gameWindow.loadImage("i-block.png")
+        elif blockShape == "j":
+            self.shape = self.gameWindow.loadImage("j-block.png")
+        elif blockShape == "L": 
+            self.shape = self.gameWindow.loadImage("L-block.png")
+        elif blockShape == "rs": 
+            self.shape = self.gameWindow.loadImage("r-s-block.png")
+        elif blockShape == "s": 
+            self.shape = self.gameWindow.loadImage("s-block.png")
+        elif blockShape == "t": 
+            self.shape = self.gameWindow.loadImage("t-block.png")
+        else:
+            raise "Invalid Value for Block Shape"
+
 
     def generateBlock(self, window): 
-        self.shape = self.possibleShapes[0]
-        windowSurface = window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
-        pygame.display.flip()
-        return windowSurface
+        return window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
 
     def updateBlockYCoordCounter(self): 
         length = len(self.possibleYCoords) - 1
@@ -87,15 +95,11 @@ class Block(GameWindow):
         else:
             self.blockYCoordCounter = counter
 
-    def renderBlockDownwardMotion(self): 
-        if self.isFalling: 
+    def renderBlockDownwardMotion(self, window): 
+        if self.isFalling:
             self.column += 1
         else: 
             pass
 
     def renderUpdatedPosition(self, window):
         window.blit(self.shape, (self.row * GameWindow.gridSize, self.column * GameWindow.gridSize))
-        pygame.display.update()
-        pygame.time.delay(100)
-        # pygame.display.flip()
-        # clock.tick(60)

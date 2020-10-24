@@ -66,7 +66,7 @@ GRID = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ]
 
-print(GRID)
+# print(GRID)
 
 """ WIP : POSITION THE WINDOW AT THE CENTER """ 
 x_pos =  100 #screen_height / 2 - screen_width / 2
@@ -294,3 +294,5 @@ def game_loop():
             
         pygame.display.update()
         clock.tick(60)
+
+game_loop()

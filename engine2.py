@@ -7,6 +7,15 @@ from classes import GameWindow, BackGroundMusic, Block
 
 blocksOnScreen = []
 collapsedBlocks = []
+possibleBlockShapes = [
+    "cube-block",
+    "i",
+    "j",
+    "L",
+    "rs",
+    "s",
+    "t"
+]
 
 def renderCollapsedBlocks(window): 
     global collapsedBlocks
@@ -14,7 +23,7 @@ def renderCollapsedBlocks(window):
         return
     else: 
         for block in collapsedBlocks: 
-            window.blit(block, (block.xCoord, block.yCoord))
+            block.renderUpdatedPosition(window)
 
 def renderDownWardMotionForAllBlocks():
     global blocksOnScreen
@@ -29,21 +38,24 @@ def renderDownwardMotion(currentBlock):
         currentBlock.yCoord = 525
         
 def spawnBlock(window): 
-    global blocksOnScreen
+    global blocksOnScreen, possibleBlockShapes
     block = Block()
+    blockShape = random.choice(possibleBlockShapes)
+    block.returnRandomBlockShape(blockShape)
     block.generateBlock(window)
     blocksOnScreen.append(block)
     return block 
 
 def generateBlock(window):
-    global blocksOnScreen
+    global blocksOnScreen, collapsedBlocks
     if blocksOnScreen == []:
         block = spawnBlock(window)
         return block
     else:
         currentBlock = blocksOnScreen[len(blocksOnScreen) - 1]
-        if currentBlock.row == 24:
+        if currentBlock.column == 21:
             currentBlock.isFalling = False
+            collapsedBlocks.append(currentBlock)
             newBlock = spawnBlock(window)
             return newBlock
         else: 
@@ -56,15 +68,15 @@ def gameLoop():
     window = gameWindow.setMode()
     backGroundMusic = BackGroundMusic()
     backGroundMusic.playRandomMusic()
-    gameWindow.renderGameBackground(window)
-    gameWindow.renderGrid(window)
     while gameWindow.windowRunning: 
+        gameWindow.renderGameBackground(window)
+        gameWindow.renderGrid(window)
+        gameWindow.renderScoreBoard(window)
         renderCollapsedBlocks(window)
         currentBlock = generateBlock(window)
-        currentBlock.renderBlockDownwardMotion()
+        currentBlock.renderBlockDownwardMotion(window)
         currentBlock.renderUpdatedPosition(window)
-        # clock.tick(8)
-        gameWindow.renderScoreBoard(window)
+        clock.tick(8)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
@@ -74,6 +86,5 @@ def gameLoop():
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_ESCAPE: 
                     gameWindow.windowRunning = False
-        # pygame.display.update()
-        # pygame.display.flip()
-        # clock.tick(60)
+        pygame.display.update()
+        clock.tick(60)
