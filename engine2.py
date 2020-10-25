@@ -17,6 +17,11 @@ possibleBlockShapes = [
     "t"
 ]
 
+def checkForCollision(currentBlock): 
+    global collapsedBlocks
+    if currentBlock.blockShape == "cube": 
+        currentBlock.checkCollisionForCube(collapsedBlocks)
+
 def renderCollapsedBlocks(window): 
     global collapsedBlocks
     if collapsedBlocks == []: 
@@ -62,6 +67,7 @@ def generateBlock(window):
             return currentBlock
 
 def gameLoop(): 
+    global collapsedBlocks
     pygame.init()
     gameWindow = GameWindow()
     clock = pygame.time.Clock()
@@ -76,6 +82,7 @@ def gameLoop():
         currentBlock = generateBlock(window)
         currentBlock.renderBlockDownwardMotion(window)
         currentBlock.renderUpdatedPosition(window)
+        checkForCollision(currentBlock)
         clock.tick(8)
 
         for event in pygame.event.get():
@@ -90,6 +97,8 @@ def gameLoop():
                     currentBlock.moveLeft()
                 if event.key == pygame.K_RIGHT and currentBlock.column < 12: 
                     currentBlock.moveRight()
+                if event.key == pygame.K_m: 
+                        backGroundMusic.togglePauseUnPause()
 
         pygame.display.update()
         clock.tick(60)

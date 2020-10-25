@@ -42,10 +42,22 @@ class BackGroundMusic():
     katyusha = pygame.mixer.Sound(musicDir + "katyusha.ogg")
     korobushka = pygame.mixer.Sound(musicDir + "korobushka.ogg")
     smuglianka = pygame.mixer.Sound(musicDir + "smuglianka.ogg")
+    currentlyPlaying = None
+    pause = False
 
     def playRandomMusic(self): 
         music = random.choice([self.kalinka, self.katyusha, self.korobushka, self.smuglianka])
+        self.currentlyPlaying = music
         pygame.mixer.Channel(0).play(music, -1)
+
+    def togglePauseUnPause(self): 
+        if not self.pause: 
+            pygame.mixer.Channel(0).pause()
+            self.pause = True
+        else: 
+            pygame.mixer.Channel(0).unpause()
+            self.pause = False
+
 
 class Block(GameWindow): 
     gameWindow = GameWindow()
@@ -56,6 +68,7 @@ class Block(GameWindow):
         self.xCoord = random.choice(self.possibleXCoords)
         self.yCoord = 100
         self.shape = ""
+        self.blockShape = ""
         self.isFalling = True
         self.blockYCoordCounter = 0
         self.column = random.choice(self.possibleRows)
@@ -64,18 +77,25 @@ class Block(GameWindow):
     def returnRandomBlockShape(self, blockShape): 
         if blockShape == "cube-block": 
             self.shape = self.gameWindow.loadImage("cube-block.png")
+            self.blockShape = "cube"
         elif blockShape == "i": 
             self.shape = self.gameWindow.loadImage("i-block.png")
+            self.blockShape = "i"
         elif blockShape == "j":
             self.shape = self.gameWindow.loadImage("j-block.png")
+            self.blockShape = "j"
         elif blockShape == "L": 
             self.shape = self.gameWindow.loadImage("L-block.png")
+            self.blockShape = "L"
         elif blockShape == "rs": 
             self.shape = self.gameWindow.loadImage("r-s-block.png")
+            self.blockShape = "rs"
         elif blockShape == "s": 
             self.shape = self.gameWindow.loadImage("s-block.png")
+            self.blockShape = "s"
         elif blockShape == "t": 
             self.shape = self.gameWindow.loadImage("t-block.png")
+            self.blockShape = "t"
         else:
             raise "Invalid Value for Block Shape"
 
@@ -115,3 +135,8 @@ class Block(GameWindow):
             self.column += 1
         else: 
             pass
+
+    def checkCollisionForCube(self, collapsedBlocks): 
+        for collapsedBlock in collapsedBlocks: 
+            if collapsedBlock.row == self.row + 1 and collapsedBlock.column == self.column + 1:
+                pass #WIP
