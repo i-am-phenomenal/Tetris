@@ -58,6 +58,26 @@ class BackGroundMusic():
             pygame.mixer.Channel(0).unpause()
             self.pause = False
 
+class GameStats(): 
+    def __init__(self): 
+        self.isPaused = False  
+        self.score = 0
+        self.highScore = 0
+        self.level = 0
+
+    def pauseGame(self): 
+        if self.isPaused: 
+            pygame.time.wait(9999)
+        else:
+            pass
+
+    def unpauseGame(self): 
+        if not self.isPaused:
+            pygame.time.wait(0)
+        else: 
+            pass
+
+
 
 class Block(GameWindow): 
     gameWindow = GameWindow()
@@ -100,7 +120,10 @@ class Block(GameWindow):
             raise "Invalid Value for Block Shape"
 
 
-    def generateBlock(self, window): 
+    def generateBlock(self, window):
+        # need to remove
+        self.shape = self.gameWindow.loadImage("cube-block.png")
+        self.blockShape = "cube"
         return window.blit(self.shape, (self.column * GameWindow.gridSize, self.row * GameWindow.gridSize))
 
     def updateBlockYCoordCounter(self): 
@@ -136,7 +159,12 @@ class Block(GameWindow):
         else: 
             pass
 
-    def checkCollisionForCube(self, collapsedBlocks): 
+    def checkCollisionForCube(self, collapsedBlocks, currentBlock): 
         for collapsedBlock in collapsedBlocks: 
-            if collapsedBlock.row == self.row + 1 and collapsedBlock.column == self.column + 1:
-                pass #WIP
+            columnCondition = abs(collapsedBlock.column - currentBlock.column) < 2
+            if collapsedBlock.row == currentBlock.row + 2 and columnCondition:
+                currentBlock.isFalling= False
+                return True
+            else:
+                pass
+        return False

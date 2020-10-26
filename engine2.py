@@ -3,7 +3,7 @@ import os
 import random
 import math 
 import time
-from classes import GameWindow, BackGroundMusic, Block
+from classes import GameWindow, BackGroundMusic, Block, GameStats
 
 blocksOnScreen = []
 collapsedBlocks = []
@@ -17,10 +17,15 @@ possibleBlockShapes = [
     "t"
 ]
 
-def checkForCollision(currentBlock): 
+def checkForCollision(currentBlock, window): 
     global collapsedBlocks
     if currentBlock.blockShape == "cube": 
-        currentBlock.checkCollisionForCube(collapsedBlocks)
+        if currentBlock.checkCollisionForCube(collapsedBlocks, currentBlock):
+            collapsedBlocks.append(currentBlock)
+            newBlock = spawnBlock(window)
+            return newBlock
+        else: 
+            return currentBlock
 
 def renderCollapsedBlocks(window): 
     global collapsedBlocks
@@ -74,6 +79,7 @@ def gameLoop():
     window = gameWindow.setMode()
     backGroundMusic = BackGroundMusic()
     backGroundMusic.playRandomMusic()
+    gameStats = GameStats()
     while gameWindow.windowRunning: 
         gameWindow.renderGameBackground(window)
         gameWindow.renderGrid(window)
@@ -82,7 +88,7 @@ def gameLoop():
         currentBlock = generateBlock(window)
         currentBlock.renderBlockDownwardMotion(window)
         currentBlock.renderUpdatedPosition(window)
-        checkForCollision(currentBlock)
+        currentBlock = checkForCollision(currentBlock, window)
         clock.tick(8)
 
         for event in pygame.event.get():
@@ -99,6 +105,13 @@ def gameLoop():
                     currentBlock.moveRight()
                 if event.key == pygame.K_m: 
                         backGroundMusic.togglePauseUnPause()
+                if event.key == pygame.K_p: 
+                    if not gameStats.isPaused: 
+                        gameStats.isPaused = True
+                        gameStats.pauseGame()
+                    else: 
+                        gameStats.isPaused = False
+                        gameStats.unpauseGame()
 
         pygame.display.update()
         clock.tick(60)
