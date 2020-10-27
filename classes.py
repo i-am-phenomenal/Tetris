@@ -13,7 +13,6 @@ class GameWindow():
     blackColor = (0, 0, 0)
     whiteColor = (200, 200, 200)
     gridSize = windowHeight // 24
-    
 
     def setMode(self): 
         return pygame.display.set_mode((self.windowHeight, self.windowWidth))
@@ -84,6 +83,7 @@ class Block(GameWindow):
     possibleXCoords = [x for x in range(326) if x % GameWindow.gridSize == 0]
     possibleYCoords = [y for y in range(531) if y % GameWindow.gridSize == 0]
     possibleRows = [x for x in range(15)]
+
     def __init__(self): 
         self.xCoord = random.choice(self.possibleXCoords)
         self.yCoord = 100
@@ -118,7 +118,15 @@ class Block(GameWindow):
             self.blockShape = "t"
         else:
             raise "Invalid Value for Block Shape"
-
+    
+    def renderBlocksForTesting(self, window):
+        gridSize = GameWindow.gridSize
+        cubeShape = self.gameWindow.loadImage("cube-block.png")
+        jShape = self.gameWindow.loadImage("j-block.png")
+        lShape = self.gameWindow.loadImage("L-block.png")
+        window.blit(cubeShape, (0, 21 * gridSize))
+        window.blit(jShape, (2 * gridSize, 21 * gridSize))
+        window.blit(lShape, (4 * gridSize, 21 * gridSize))
 
     def generateBlock(self, window):
         # need to remove

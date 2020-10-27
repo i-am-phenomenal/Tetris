@@ -19,13 +19,14 @@ possibleBlockShapes = [
 
 def checkForCollision(currentBlock, window): 
     global collapsedBlocks
-    if currentBlock.blockShape == "cube": 
-        if currentBlock.checkCollisionForCube(collapsedBlocks, currentBlock):
-            collapsedBlocks.append(currentBlock)
-            newBlock = spawnBlock(window)
-            return newBlock
-        else: 
-            return currentBlock
+    # if currentBlock.blockShape == "cube": 
+    if currentBlock.checkCollisionForCube(collapsedBlocks, currentBlock):
+        collapsedBlocks.append(currentBlock)
+        newBlock = spawnBlock(window)
+        return newBlock
+    else: 
+        return currentBlock
+    # elif currentBlock == ""
 
 def renderCollapsedBlocks(window): 
     global collapsedBlocks
@@ -89,6 +90,9 @@ def gameLoop():
         currentBlock.renderBlockDownwardMotion(window)
         currentBlock.renderUpdatedPosition(window)
         currentBlock = checkForCollision(currentBlock, window)
+        currentBlock.renderBlocksForTesting(window)
+        # print(currentBlock.row, "ROW")
+        # print(currentBlock.column, "COLUMN")
         clock.tick(8)
 
         for event in pygame.event.get():
