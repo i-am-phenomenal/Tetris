@@ -20,6 +20,9 @@ class GameWindow():
     def loadImage(self, imageName): 
         return pygame.image.load(self.imagesDir + imageName)
 
+    def setCaption(self, caption): 
+        pygame.display.set_caption(caption)
+
     def renderGameBackground(self, window):
         backGroundImage = self.loadImage("grid.jpg")
         window.blit(backGroundImage, (0,0))
@@ -94,13 +97,25 @@ class Block(GameWindow):
         self.column = random.choice(self.possibleRows)
         self.row = 0
 
-    def returnRandomBlockShape(self, blockShape): 
+    def checkColumnValidity(self, upperLimit):
+        return self.column > upperLimit
+
+    def getUpdatedColumnValue(self, upperLimit):
+        self.column = random.choice([x for x in range(0, upperLimit)])
+
+    def getValidColumnValue(self, upperLimit):
+        if self.checkColumnValidity(upperLimit):
+            self.column = self.getUpdatedColumnValue(upperLimit)
+
+    def returnRandomBlockShape(self, blockShape, upperLimit): 
         if blockShape == "cube-block": 
             self.shape = self.gameWindow.loadImage("cube-block.png")
             self.blockShape = "cube"
+            self.getValidColumnValue(upperLimit)
         elif blockShape == "i": 
             self.shape = self.gameWindow.loadImage("i-block.png")
             self.blockShape = "i"
+            self.getValidColumnValue(upperLimit)
         elif blockShape == "j":
             self.shape = self.gameWindow.loadImage("j-block.png")
             self.blockShape = "j"
@@ -135,8 +150,8 @@ class Block(GameWindow):
 
     def generateBlock(self, window):
         # need to remove
-        self.shape = self.gameWindow.loadImage("cube-block.png")
-        self.blockShape = "cube"
+        self.shape = self.gameWindow.loadImage("i-block.png")
+        self.blockShape = "i"
         return window.blit(self.shape, (self.column * GameWindow.gridSize, self.row * GameWindow.gridSize))
 
     def updateBlockYCoordCounter(self): 

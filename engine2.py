@@ -17,6 +17,56 @@ possibleBlockShapes = [
     "t"
 ]
 
+# 23 rows and 15 cols
+grid =  [
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        ]
+
+def printGrid():
+    global grid
+    for row in grid:
+        print(row)
+    print("\n")
+
+def updateGrid(collapsedBlocks): 
+    global grid
+    for block in collapsedBlocks: 
+        if block.blockShape == "cube": 
+            for rowIter in range(block.row, (block.row + 2)):
+                for colIter in range(block.column, (block.column + 2)): 
+                    grid[rowIter][colIter] = 1
+        elif block.blockShape == "i":
+            print((block.row, block.column))
+            # WIP. Need to resolve an error over here somewhere.
+            for rowIter in range(block.row, (block.row + 4)):
+                for colIter in range(block.column, (block.column + 1)):
+                    grid[rowIter][colIter] = 1
+            printGrid()
+
+
+
 def renderBlocksForTesting(window): 
     global collapsedBlocks
     cubeBlock = Block()
@@ -48,6 +98,7 @@ def checkForCollision(currentBlock, window):
     # if currentBlock.blockShape == "cube": 
     if currentBlock.checkCollisionForCube(collapsedBlocks, currentBlock):
         collapsedBlocks.append(currentBlock)
+        updateGrid(collapsedBlocks)
         newBlock = spawnBlock(window)
         return newBlock
     else: 
@@ -60,7 +111,6 @@ def renderCollapsedBlocks(window):
         return
     else: 
         for block in collapsedBlocks: 
-            print((block.row, block.column))
             block.renderUpdatedPosition(window)
 
 def renderDownWardMotionForAllBlocks():
@@ -68,18 +118,20 @@ def renderDownWardMotionForAllBlocks():
     for block in blocksOnScreen:
         block.renderBlockDownwardMotion()
 
-def renderDownwardMotion(currentBlock):
-    global blocksOnScreen
-    if currentBlock.yCoord < 525:
-        currentBlock.renderBlockDownwardMotion()
-    elif currentBlock.yCoord >= 525: 
-        currentBlock.yCoord = 525
-        
+def getColumnUpperLimit(blockShape): 
+    if blockShape == "cube-block": 
+        return 13
+    elif blockShape == "i": 
+        return 11
+    elif blockShape == "j" or blockShape == "s" or blockShape == "L" or blockShape == "t" or blockShape == "rs": 
+        return 12
+
 def spawnBlock(window): 
     global blocksOnScreen, possibleBlockShapes
     block = Block()
     blockShape = random.choice(possibleBlockShapes)
-    block.returnRandomBlockShape(blockShape)
+    columnUpperLimit = getColumnUpperLimit(blockShape)
+    block.returnRandomBlockShape(blockShape, columnUpperLimit)
     block.generateBlock(window)
     blocksOnScreen.append(block)
     return block 
@@ -91,13 +143,22 @@ def generateBlock(window):
         return block
     else:
         currentBlock = blocksOnScreen[len(blocksOnScreen) - 1]
-        if currentBlock.row == 21:
-            currentBlock.isFalling = False
-            collapsedBlocks.append(currentBlock)
-            newBlock = spawnBlock(window)
-            return newBlock
+        if currentBlock.blockShape == "i": 
+            if currentBlock.row == 22:
+                currentBlock.isFalling = False 
+                collapsedBlocks.append(currentBlock)
+                newBlock = spawnBlock(window)
+                return newBlock
+            else:
+                return currentBlock
         else: 
-            return currentBlock
+            if currentBlock.row == 21:
+                currentBlock.isFalling = False
+                collapsedBlocks.append(currentBlock)
+                newBlock = spawnBlock(window)
+                return newBlock
+            else: 
+                return currentBlock
 
 def gameLoop(): 
     global collapsedBlocks
@@ -105,7 +166,8 @@ def gameLoop():
     gameWindow = GameWindow()
     clock = pygame.time.Clock()
     window = gameWindow.setMode()
-    collapsedBlocks = renderBlocksForTesting(window)
+    gameWindow.setCaption("Tetris - Aditya Chaturvedi")
+    # collapsedBlocks = renderBlocksForTesting(window)
     backGroundMusic = BackGroundMusic()
     backGroundMusic.playRandomMusic()
     gameStats = GameStats()
@@ -125,7 +187,7 @@ def gameLoop():
             if event.type == pygame.QUIT: 
                 gameWindow.windowRunning = False
                 sys.exit()
-                
+
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_ESCAPE: 
                     gameWindow.windowRunning = False
