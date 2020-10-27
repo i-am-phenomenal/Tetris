@@ -17,6 +17,32 @@ possibleBlockShapes = [
     "t"
 ]
 
+def renderBlocksForTesting(window): 
+    global collapsedBlocks
+    cubeBlock = Block()
+    jBlock = Block()
+    lBlock = Block()
+    cubeBlock.shape = cubeBlock.gameWindow.loadImage("cube-block.png")
+    cubeBlock.blockShape = "cube"
+    cubeBlock.row = 21
+    cubeBlock.column = 2
+    cubeBlock.isFalling = False
+    jBlock.shape = jBlock.gameWindow.loadImage("j-block.png")
+    jBlock.blockShape = "j"
+    jBlock.isFalling = False
+    jBlock.row = 18
+    jBlock.column = 5
+    lBlock.shape = lBlock.gameWindow.loadImage("L-block.png")
+    lBlock.blockShape = "L"
+    lBlock.isFalling = False
+    lBlock.row = 21
+    lBlock.column = 6
+    collapsedBlocks.append(cubeBlock)
+    collapsedBlocks.append(jBlock)
+    collapsedBlocks.append(lBlock)
+    return collapsedBlocks
+
+
 def checkForCollision(currentBlock, window): 
     global collapsedBlocks
     # if currentBlock.blockShape == "cube": 
@@ -34,6 +60,7 @@ def renderCollapsedBlocks(window):
         return
     else: 
         for block in collapsedBlocks: 
+            print((block.row, block.column))
             block.renderUpdatedPosition(window)
 
 def renderDownWardMotionForAllBlocks():
@@ -78,9 +105,11 @@ def gameLoop():
     gameWindow = GameWindow()
     clock = pygame.time.Clock()
     window = gameWindow.setMode()
+    collapsedBlocks = renderBlocksForTesting(window)
     backGroundMusic = BackGroundMusic()
     backGroundMusic.playRandomMusic()
     gameStats = GameStats()
+    
     while gameWindow.windowRunning: 
         gameWindow.renderGameBackground(window)
         gameWindow.renderGrid(window)
@@ -90,9 +119,6 @@ def gameLoop():
         currentBlock.renderBlockDownwardMotion(window)
         currentBlock.renderUpdatedPosition(window)
         currentBlock = checkForCollision(currentBlock, window)
-        currentBlock.renderBlocksForTesting(window)
-        # print(currentBlock.row, "ROW")
-        # print(currentBlock.column, "COLUMN")
         clock.tick(8)
 
         for event in pygame.event.get():

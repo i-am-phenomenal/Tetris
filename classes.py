@@ -118,6 +118,11 @@ class Block(GameWindow):
             self.blockShape = "t"
         else:
             raise "Invalid Value for Block Shape"
+
+    def renderBlockAtPosition(self, window, row, col): 
+        gridSize = GameWindow.gridSize
+        print((row * gridSize, col * gridSize) )
+        window.blit(self.shape, (30 * gridSize, 18 * gridSize))
     
     def renderBlocksForTesting(self, window):
         gridSize = GameWindow.gridSize
