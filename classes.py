@@ -188,7 +188,7 @@ class Block(GameWindow):
             pass
 
     def checkCollisionForCube(self, collapsedBlocks, currentBlock): 
-        for collapsedBlock in collapsedBlocks: 
+        for collapsedBlock in collapsedBlocks.collapsed: 
             columnCondition = abs(collapsedBlock.column - currentBlock.column) < 2
             if collapsedBlock.row == currentBlock.row + 2 and columnCondition:
                 currentBlock.isFalling= False
@@ -196,3 +196,62 @@ class Block(GameWindow):
             else:
                 pass
         return False
+
+class Grid(): 
+    def __init__(self): 
+        # 23 rows and 15 cols
+        self.grid = grid =  [
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        ]
+
+    def printGrid(self): 
+        for row in self.grid:
+            print(row)
+        print("\n")
+
+    def updateGrid(self, collapsedBlocks): 
+        for block in collapsedBlocks.collapsed: 
+            if block.blockShape == "cube": 
+                for rowIter in range(block.row, (block.row + 2)):
+                    for colIter in range(block.column, (block.column + 2)): 
+                        self.grid[rowIter][colIter] = 1
+            elif block.blockShape == "i":
+
+                # WIP. Need to resolve an error over here somewhere.
+                for rowIter in range(block.row, (block.row + 4)):
+                    for colIter in range(block.column, (block.column + 1)):
+                        print((rowIter, colIter))
+                        print(self.grid[23][9], "VAL")
+                        # print(len(self.grid), "TOTAL ROWS ")
+                        # print(len(self.grid[0]), "TOTAL COLUMNS ")
+                        self.grid[rowIter][colIter] = 1
+                self.printGrid()
+
+class CollapsedBlocks(Block): 
+    def __init__(self): 
+        self.collapsed = []
+
+    def addToCollapsedBlocks(self, block):
+        self.collapsed.append(block)
